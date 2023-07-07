@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.powernode.business.mapper.BusRentMapper">
+    
+    <resultMap type="BusRent" id="BusRentResult">
+        <result property="id"    column="id"    />
+        <result property="rentSn"    column="rent_sn"    />
+        <result property="rentprice"    column="rentprice"    />
+        <result property="beginDate"    column="begin_date"    />
+        <result property="returnDate"    column="return_date"    />
+        <result property="rentStatus"    column="rent_status"    />
+        <result property="identity"    column="identity"    />
+        <result property="carNumber"    column="car_number"    />
+        <result property="opername"    column="opername"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectBusRentVo">
+        select id, rent_sn, rentprice, begin_date, return_date, rent_status, identity, car_number, opername, del_flag, create_by, create_time, update_by, update_time, dept_id from bus_rent
+    </sql>
+
+    <select id="selectBusRentList" parameterType="BusRent" resultMap="BusRentResult">
+        <include refid="selectBusRentVo"/>
+        <where>  
+            <if test="rentSn != null  and rentSn != ''"> and rent_sn = #{rentSn}</if>
+            <if test="rentprice != null "> and rentprice = #{rentprice}</if>
+            <if test="startDate != null "> and create_time >= #{startDate}</if>
+            <if test="endDate != null "> and create_time <![CDATA[<=]]> ${endDate}</if>
+            <if test="rentStatus != null "> and rent_status = #{rentStatus}</if>
+            <if test="identity != null  and identity != ''"> and identity = #{identity}</if>
+            <if test="carNumber != null  and carNumber != ''"> and car_number = #{carNumber}</if>
+            <if test="opername != null  and opername != ''"> and opername like concat('%', #{opername}, '%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            and del_flag=0
+        </where>
+    </select>
+    
+    <select id="selectBusRentById" parameterType="Long" resultMap="BusRentResult">
+        <include refid="selectBusRentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusRent" parameterType="BusRent" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_rent
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rentSn != null and rentSn != ''">rent_sn,</if>
+            <if test="rentprice != null">rentprice,</if>
+            <if test="beginDate != null">begin_date,</if>
+            <if test="returnDate != null">return_date,</if>
+            <if test="rentStatus != null">rent_status,</if>
+            <if test="identity != null">identity,</if>
+            <if test="carNumber != null">car_number,</if>
+            <if test="opername != null">opername,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rentSn != null and rentSn != ''">#{rentSn},</if>
+            <if test="rentprice != null">#{rentprice},</if>
+            <if test="beginDate != null">#{beginDate},</if>
+            <if test="returnDate != null">#{returnDate},</if>
+            <if test="rentStatus != null">#{rentStatus},</if>
+            <if test="identity != null">#{identity},</if>
+            <if test="carNumber != null">#{carNumber},</if>
+            <if test="opername != null">#{opername},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusRent" parameterType="BusRent">
+        update bus_rent
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rentSn != null and rentSn != ''">rent_sn = #{rentSn},</if>
+            <if test="rentprice != null">rentprice = #{rentprice},</if>
+            <if test="beginDate != null">begin_date = #{beginDate},</if>
+            <if test="returnDate != null">return_date = #{returnDate},</if>
+            <if test="rentStatus != null">rent_status = #{rentStatus},</if>
+            <if test="identity != null">identity = #{identity},</if>
+            <if test="carNumber != null">car_number = #{carNumber},</if>
+            <if test="opername != null">opername = #{opername},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusRentById" parameterType="Long">
+        delete from bus_rent where id = #{id}
+    </delete>
+
+    <update id="deleteBusRentByIds" parameterType="String">
+        update bus_rent set del_flag=2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="queryRentByRentSn" resultMap="BusRentResult">
+        <include refid="selectBusRentVo"/>
+        where rent_sn = #{rentSn}
+    </select>
+</mapper>

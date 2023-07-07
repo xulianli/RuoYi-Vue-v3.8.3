@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.powernode.business.mapper.BusCheckMapper">
+    
+    <resultMap type="BusCheck" id="BusCheckResult">
+        <result property="id"    column="id"    />
+        <result property="checkSn"    column="check_sn"    />
+        <result property="checkDate"    column="check_date"    />
+        <result property="checkDesc"    column="check_desc"    />
+        <result property="problem"    column="problem"    />
+        <result property="payMoney"    column="pay_money"    />
+        <result property="opername"    column="opername"    />
+        <result property="rentSn"    column="rent_sn"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBusCheckVo">
+        select id, check_sn, check_date, check_desc, problem, pay_money, opername, rent_sn, del_flag, create_by, create_time, update_by, dept_id, update_time from bus_check
+    </sql>
+
+    <select id="selectBusCheckList" parameterType="BusCheck" resultMap="BusCheckResult">
+        <include refid="selectBusCheckVo"/>
+        <where>  
+            <if test="checkSn != null  and checkSn != ''"> and check_sn = #{checkSn}</if>
+            <if test="checkDate != null "> and check_date = #{checkDate}</if>
+            <if test="checkDesc != null  and checkDesc != ''"> and check_desc like concat('%', #{checkDesc}, '%')</if>
+            <if test="problem != null  and problem != ''"> and problem like concat('%', #{problem}, '%')</if>
+            <if test="payMoney != null "> and pay_money = #{payMoney}</if>
+            <if test="opername != null  and opername != ''"> and opername like concat('%', #{opername}, '%')</if>
+            <if test="rentSn != null  and rentSn != ''"> and rent_sn = #{rentSn}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusCheckById" parameterType="Long" resultMap="BusCheckResult">
+        <include refid="selectBusCheckVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusCheck" parameterType="BusCheck" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_check
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="checkSn != null and checkSn != ''">check_sn,</if>
+            <if test="checkDate != null">check_date,</if>
+            <if test="checkDesc != null">check_desc,</if>
+            <if test="problem != null">problem,</if>
+            <if test="payMoney != null">pay_money,</if>
+            <if test="opername != null">opername,</if>
+            <if test="rentSn != null">rent_sn,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="checkSn != null and checkSn != ''">#{checkSn},</if>
+            <if test="checkDate != null">#{checkDate},</if>
+            <if test="checkDesc != null">#{checkDesc},</if>
+            <if test="problem != null">#{problem},</if>
+            <if test="payMoney != null">#{payMoney},</if>
+            <if test="opername != null">#{opername},</if>
+            <if test="rentSn != null">#{rentSn},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusCheck" parameterType="BusCheck">
+        update bus_check
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="checkSn != null and checkSn != ''">check_sn = #{checkSn},</if>
+            <if test="checkDate != null">check_date = #{checkDate},</if>
+            <if test="checkDesc != null">check_desc = #{checkDesc},</if>
+            <if test="problem != null">problem = #{problem},</if>
+            <if test="payMoney != null">pay_money = #{payMoney},</if>
+            <if test="opername != null">opername = #{opername},</if>
+            <if test="rentSn != null">rent_sn = #{rentSn},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusCheckById" parameterType="Long">
+        delete from bus_check where id = #{id}
+    </delete>
+
+    <delete id="deleteBusCheckByIds" parameterType="String">
+        delete from bus_check where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

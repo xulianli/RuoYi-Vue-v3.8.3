@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.powernode.business.mapper.BusCustomerMapper">
+    
+    <resultMap id="BusCustomerResult" type="com.powernode.business.domain.BusCustomer">
+        <result property="id"    column="id"    />
+        <result property="identity"    column="identity"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="address"    column="address"    />
+        <result property="phone"    column="phone"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="job"    column="job"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBusCustomerVo">
+        select id, identity, customer_name, sex, address, phone, dept_name, dept_id, job, del_flag, create_by, create_time, update_by, update_time from bus_customer
+    </sql>
+
+    <select id="selectBusCustomerList" parameterType="com.powernode.business.domain.BusCustomer" resultMap="BusCustomerResult">
+        <include refid="selectBusCustomerVo"/>
+        <where>  
+            <if test="identity != null  and identity != ''"> and identity = #{identity}</if>
+            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="deptName != null and deptName != '' "> and deptName like concat('%',#{deptName},'%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="job != null  and job != ''"> and job = #{job}</if>
+            and del_flag=0
+        </where>
+    </select>
+    
+    <select id="selectBusCustomerById" parameterType="Long" resultMap="BusCustomerResult">
+        <include refid="selectBusCustomerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusCustomer" parameterType="com.powernode.business.domain.BusCustomer" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_customer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="identity != null and identity != ''">identity,</if>
+            <if test="customerName != null">customer_name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="address != null">address,</if>
+            <if test="phone != null">phone,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="job != null">job,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="identity != null and identity != ''">#{identity},</if>
+            <if test="customerName != null">#{customerName},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="address != null">#{address},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="job != null">#{job},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusCustomer" parameterType="com.powernode.business.domain.BusCustomer">
+        update bus_customer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="identity != null and identity != ''">identity = #{identity},</if>
+            <if test="customerName != null">customer_name = #{customerName},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="job != null">job = #{job},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusCustomerById" parameterType="Long">
+        delete from bus_customer where id = #{id}
+    </delete>
+
+    <update id="deleteBusCustomerByIds" parameterType="String">
+        update bus_customer set del_flag=2 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="selectBusCustomerByIdentity" resultMap="BusCustomerResult">
+        <include refid="selectBusCustomerVo"/>
+        where identity =#{identity}
+    </select>
+
+    <select id="countCustomerListByAddress" resultType="java.util.Map">
+        select count(1) as value, address as name from bus_customer group by address
+    </select>
+</mapper>
